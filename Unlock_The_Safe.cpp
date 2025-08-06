@@ -29,7 +29,7 @@ int main()
             int cnt2 = max(abs(a[i] - b[i]), 9 - abs(a[i] - b[i]));
             // cout << i << "->" << cnt << endl;
             moves += cnt;
-            // cout << i <<"-> "  << cnt2 << endl;
+             cout << i <<"-> "  << cnt2 << endl;
             diff.push_back(cnt2 - cnt);  //Odd
         }
 
@@ -46,12 +46,12 @@ int main()
         int remain = k - moves;
         // cout << k <<" " << moves <<" " << remain << endl;
 
-        if (remain < 0)
-            cout << "No" << endl;
-        else if (remain % 2 == 0 || minDiff <= remain)
-            cout << "Yes" << endl;
-        else
-            cout << "No" << endl;
+        // if (remain < 0)
+        //     cout << "No" << endl;
+        // else if (remain % 2 == 0 || minDiff <= remain)
+        //     cout << "Yes" << endl;
+        // else
+        //     cout << "No" << endl;
     }
     return 0;
 }
