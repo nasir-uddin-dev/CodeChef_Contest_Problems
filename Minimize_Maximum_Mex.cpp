@@ -48,7 +48,70 @@
 // A=[0,1,2]
 // B=[1,0,2]
 // All numbers 0,1,2 are spread out - no index has the same value in both arrays.
-//We can rearrange by swapping to make :
-//A=[0,1,2]
-//B=[0,1,2]
-//MEX(A) = 3, MEX(B) = 3 -> max = 3
+// We can rearrange by swapping to make :
+// A=[0,1,2]
+// B=[0,1,2]
+// MEX(A) = 3, MEX(B) = 3 -> max = 3
+
+// Observation
+// The idea behind this logic is that, you need to find the minimum element which is not present including both the vectors
+
+// Approach
+// Here in this bunch of code, i tried to map all the elements from the both vectors. Also, mapped elements which are worthless to swap i.e. that have same values (a[i]==b[i]).
+// This the most interesting part of the code. we find the Mex using the u map, in which all the vector element are stored. The first missing vector element is the range of finding our mex.
+//  Now, the possible mexes are in the range 0 to c1. To minimize the value of Mex we iterate from this range, also we take care that these values aint from the useless wla part.
+//  why we are doing so? to reduce mex. it does mean, value by exchanging can be reduced bcz by swapping the makes a gap i.e. create a mex.
+//  why we prefer the second element in compared to the first? because we need to find the max(both vectors Mex). So, the first one is not going to be the answer as its always swappable. When there is one element is L, then c1 is answer. because its the second max element. but when, l.size()>=2, second most is L[1].
+
+#include <bits/stdc++.h>
+using namespace std;
+int main()
+{
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int n;
+        cin >> n;
+
+        vector<int> a(n), b(n);
+        for (auto &x : a)
+            cin >> x;
+        for (auto &x : b)
+            cin >> x;
+
+        set<int> both, one;
+        for (int i = 0; i < n; i++)
+        {
+            if (a[i] == b[i])
+                both.insert(a[i]);
+            else
+                one.insert(a[i]);
+            one.insert(b[i]);
+        }
+
+        // for (auto val : both)
+        //     cout << val << " ";
+        // cout << endl;
+        // for (auto val : one)
+        //     cout << val << " ";
+
+        int mex = 0;
+        bool first = true;
+        while (true)
+        {
+            if (both.count(mex))
+                mex++;
+            else if (first && one.count(mex))
+            {
+                mex++;
+                first = false;
+            }
+            else
+                break;
+        }
+
+        cout << mex << endl;
+    }
+    return 0;
+}
