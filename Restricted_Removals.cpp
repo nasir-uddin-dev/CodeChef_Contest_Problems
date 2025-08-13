@@ -55,7 +55,7 @@
 //  b = [0,1]               b = [1,0,.......]
 // after this pattern -> entire of array A can be deleted
 
-#include <bits/stdc++.h>
+/* #include <bits/stdc++.h>
 using namespace std;
 int main()
 {
@@ -100,39 +100,112 @@ int main()
     }
 
     return 0;
+} */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+void solve()
+{
+
+    int n, m;
+    cin >> n >> m;
+
+    vector<int> a(n);
+    vector<int> b(n);
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+    }
+    for (int i = 0; i < m; i++)
+    {
+        cin >> b[i];
+    }
+
+    vector<vector<int>> nx(2, vector<int>(n + 1, 1e9));
+    nx[b[0]][0] = 0;
+    for (int i = 1; i < m; i++)
+    {
+        nx[0][i] = nx[0][i - 1] + 1;
+        nx[1][i] = nx[1][i - 1] + 1;
+
+        if (b[i] == 0)
+        {
+            nx[0][i] = 0;
+        }
+        else
+        {
+            nx[1][i] = 0;
+        }
+    }
+
+    for (int i = m; i < n; i++)
+    {
+        nx[0][i] = nx[0][i - 1] + 1;
+        nx[1][i] = nx[1][i - 1] + 1;
+    }
+
+    vector<int> req(n + 1);
+    vector<int> cnt(n + 1);
+
+    for (int i = n - 1; i >= 0; i--)
+    {
+
+        int r = nx[a[i]][i];
+        if (r == 0)
+        {
+            cnt[i + 1]++;
+        }
+        else
+        {
+            req[i] = r;
+        }
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        if (cnt[i] >= req[i] && (i >= m || a[i] != b[i]))
+        {
+            cnt[i + 1]++;
+        }
+        cnt[i + 1] += cnt[i];
+    }
+    cout << n - cnt[n] << endl;
 }
 
+int32_t main()
+{
+    init_code();
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
+    return 0;
+}
 
 Initialization
-INF = 1000000000
-prev_0 = [INF, INF, INF]
-prev_1 = [INF, INF, INF]
+    INF = 1000000000 prev_0 = [ INF, INF, INF ] prev_1 = [ INF, INF, INF ]
 
-Loop i = 0:
+    Loop i = 0 :
 
-i == 0 so we skip i-dependent increment.
-i < m and b[0] == 0 → set prev_0[0] = 0.
-b[0] is not 1 so prev_1[0] remains INF.
-Now: prev_0 = [0, INF, INF], prev_1 = [INF, INF, INF].
+    i == 0 so we skip i - dependent increment.i < m and
+             b[0] == 0 → set prev_0[0] = 0. b[0] is not 1 so prev_1[0] remains INF.Now : prev_0 = [ 0, INF, INF ],
+    prev_1 = [ INF, INF, INF ].
 
-Loop i = 1:
-prev_0[1] = prev_0[0] + 1 = 0 + 1 = 1.
-prev_1[1] = prev_1[0] + 1 = INF + 1 = INF + 1 (still effectively INF).
-i < m and b[1] == 1 → set prev_1[1] = 0.
-Now: prev_0 = [0, 1, INF], prev_1 = [INF, 0, INF].
+             Loop i = 1 : prev_0[1] = prev_0[0] + 1 = 0 + 1 = 1. prev_1[1] = prev_1[0] + 1 = INF + 1 = INF + 1(still effectively INF).i < m and b[1] == 1 → set prev_1[1] = 0. Now : prev_0 = [ 0, 1, INF ],
+    prev_1 = [ INF, 0, INF ].
 
-Loop i = 2:
-prev_0[2] = prev_0[1] + 1 = 1 + 1 = 2.
-prev_1[2] = prev_1[1] + 1 = 0 + 1 = 1.
-i < m and b[2] == 0 → set prev_0[2] = 0.
-Now: prev_0 = [0, 1, 0], prev_1 = [INF, 0, 1].
+             Loop i = 2 : prev_0[2] = prev_0[1] + 1 = 1 + 1 = 2. prev_1[2] = prev_1[1] + 1 = 0 + 1 = 1. i < m and b[2] == 0 → set prev_0[2] = 0. Now : prev_0 = [ 0, 1, 0 ],
+    prev_1 = [ INF, 0, 1 ].
 
-Second pass: ans = 0
+             Second pass : ans = 0
 
-i = 0: a[0] == 0 and prev_0[0] == 0 → 0 <= 0 true → ans = 1
-i = 1: a[1] == 1 and prev_1[1] == 0 → 0 <= 1 true → ans = 2
-i = 2: a[2] == 1 and prev_1[2] == 1 → 1 <= 2 true → ans = 3
+    i = 0 : a[0] == 0 and prev_0[0] == 0 → 0 <= 0 true → ans = 1 i = 1 : a[1] == 1 and prev_1[1] == 0 → 0 <= 1 true → ans = 2 i = 2 : a[2] == 1 and prev_1[2] == 1 → 1 <= 2 true → ans = 3
 
-Result printed: n - ans = 3 - 3 = 0.
+                                                                                                                                                                                         Result printed : n -
+                                                                                                                                                                                                          ans = 3 - 3 = 0.
 
-So in this example every element of a got matched → zero left unmatched.
+                                                                                                                                                                                                                        So in this example every element of a got matched → zero left unmatched.
